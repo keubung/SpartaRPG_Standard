@@ -1,0 +1,2 @@
+# SpartaRPG_Standard
+ 
