@@ -5,33 +5,37 @@ using UnityEngine;
 
 public class ObjectPool : MonoBehaviour
 {
-    public GameObject findObject = GameObject.Find("bullet");
-
-    public GameObject prefeb;
+    private Dictionary<string, ObjectPool> pools = new Dictionary<string, ObjectPool>();
+    
+    public GameObject prefab;
     List<GameObject> pool = new List<GameObject>();
-    public int poolSize = 300;
+    public int poolSize;
 
-    public string Key;
+    public string key;
 
     void Start()
     {
-        for (int i = 0; i < poolSize; i++)
+        if (key == "Bullet")
         {
-            GameObject bullet = Instantiate(prefeb);
-            pool.Add(bullet);
+            InitializePool(poolSize, "Bullet");
+        }
+        else if (key == "Monster")
+        {
+            InitializePool(poolSize, "Monster");
         }
     }
 
     public GameObject Get()
     {
-        for (int i = 0; i < poolSize; i++)
+        foreach (GameObject obj in pool)
         {
-            if (findObject.activeSelf == false)
+            if (!obj.activeSelf)
             {
-                pool[i].SetActive(true);
+                obj.SetActive(true);
+                return obj;
             }
-            return pool[i];
         }
+
         return null;
     }
 
@@ -39,5 +43,15 @@ public class ObjectPool : MonoBehaviour
     {
         obj.SetActive(false);
     }
-    //Q2-2 진행중, 유니티에서 제대로 생성이 되는지 확인하고 제출
+
+    private void InitializePool(int size, string objectType)
+    {
+        for (int i = 0; i < size; i++)
+        {
+            GameObject obj = Instantiate(prefab);
+            obj.SetActive(false);
+            obj.name = objectType + "_" + i;
+            pool.Add(obj);
+        }
+    }
 }

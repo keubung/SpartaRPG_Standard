@@ -37,5 +37,10 @@ public class QuestManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    
+
+    private void Start()
+    {
+        ObjectPool.Instantiate(instance);
+    }
+
 }
