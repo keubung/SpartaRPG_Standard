@@ -7,15 +7,18 @@ using UnityEngine.Pool;
 public class ObjectPool : MonoBehaviour
 {
     private Dictionary<string, List<GameObject>> pools = new Dictionary<string, List<GameObject>>();
-    
-    public GameObject prefab;
-    public int poolSize;
 
-    public string key;
+    public GameObject bulletPrefab;
+    public GameObject monsterPrefab;
+    public int bulletPoolSize;
+    public int monsterPoolSize;
+    string bulletKey = "Bullet";
+    string monsterKey = "Monster";
 
     void Start()
     {
-        InitializePool(poolSize, key);
+        InitializePool(bulletPoolSize, bulletKey, bulletPrefab);
+        InitializePool(monsterPoolSize, monsterKey, monsterPrefab);
     }
     public GameObject Get(string objectType)
     {
@@ -39,7 +42,7 @@ public class ObjectPool : MonoBehaviour
         obj.transform.SetParent(null);
     }
 
-    private void InitializePool(int size, string objectType)
+    private void InitializePool(int size, string objectType, GameObject prefab)
     {
         if (!pools.ContainsKey(objectType))
         {
@@ -50,7 +53,7 @@ public class ObjectPool : MonoBehaviour
         {
             GameObject obj = Instantiate(prefab);
             obj.SetActive(false);
-            obj.name = objectType + "_" + i;
+            obj.name = objectType + "_" + (i + 1);
             pools[objectType].Add(obj);
         }
     }
