@@ -26,7 +26,7 @@ public class ObjectPool : MonoBehaviour
         {
             foreach (GameObject obj in pools[objectType])
             {
-                if (!obj.activeSelf)
+                if (!obj.activeInHierarchy)
                 {
                     obj.SetActive(true);
                     return obj;
