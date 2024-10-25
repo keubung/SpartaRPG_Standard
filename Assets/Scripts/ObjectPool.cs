@@ -2,56 +2,56 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Pool;
 
 public class ObjectPool : MonoBehaviour
 {
-    private Dictionary<string, ObjectPool> pools = new Dictionary<string, ObjectPool>();
+    private Dictionary<string, List<GameObject>> pools = new Dictionary<string, List<GameObject>>();
     
     public GameObject prefab;
-    List<GameObject> pool = new List<GameObject>();
     public int poolSize;
 
     public string key;
 
     void Start()
     {
-        if (key == "Bullet")
-        {
-            InitializePool(poolSize, "Bullet");
-        }
-        else if (key == "Monster")
-        {
-            InitializePool(poolSize, "Monster");
-        }
+        InitializePool(poolSize, key);
     }
-
-    public GameObject Get()
+    public GameObject Get(string objectType)
     {
-        foreach (GameObject obj in pool)
+        if (pools.ContainsKey(objectType))
         {
-            if (!obj.activeSelf)
+            foreach (GameObject obj in pools[objectType])
             {
-                obj.SetActive(true);
-                return obj;
+                if (!obj.activeSelf)
+                {
+                    obj.SetActive(true);
+                    return obj;
+                }
             }
         }
-
         return null;
     }
 
     public void Release(GameObject obj)
     {
         obj.SetActive(false);
+        obj.transform.SetParent(null);
     }
 
     private void InitializePool(int size, string objectType)
     {
+        if (!pools.ContainsKey(objectType))
+        {
+            pools[objectType] = new List<GameObject>();
+        }
+
         for (int i = 0; i < size; i++)
         {
             GameObject obj = Instantiate(prefab);
             obj.SetActive(false);
             obj.name = objectType + "_" + i;
-            pool.Add(obj);
+            pools[objectType].Add(obj);
         }
     }
 }

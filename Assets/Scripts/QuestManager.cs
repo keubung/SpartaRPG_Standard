@@ -1,10 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class QuestManager : MonoBehaviour
 {
     private static QuestManager instance;
+
+    public QuestDataSO[] quests;
+    public GameObject questPrefab;
+    public Transform contentTransform;
+
 
     public static QuestManager Instance
     {
@@ -41,6 +48,19 @@ public class QuestManager : MonoBehaviour
     private void Start()
     {
         ObjectPool.Instantiate(instance);
+        for (int i = 0; i < quests.Length; i++)
+        {
+            QuestDataSO quest = quests[i];
+
+            GameObject questObject = Instantiate(questPrefab, contentTransform);
+
+            Text questText = questObject.GetComponent<Text>();
+            if(questText != null)
+            {
+                questText.text = $"Quest {i + 1} - {quest.QuestName} (최소 레벨) {quest.QuestRequiredLevel}";
+                Debug.Log("퀘스트 출력");
+            }
+        }
     }
 
 }
